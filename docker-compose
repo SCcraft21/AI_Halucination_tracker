@@ -1,0 +1,56 @@
+version: "3.9"
+
+services:
+  hardhat:
+    container_name: hardhat-node
+    build:
+      context: ./contracts
+      dockerfile: Dockerfile
+    command: npx hardhat node
+    ports:
+      - "8545:8545"
+    volumes:
+      - ./contracts:/app
+      - ./contracts/deployment:/contracts/deployment
+    networks:
+      - devnet
+
+  backend:
+    container_name: hallucination-backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+    environment:
+      HARDHAT_URL: http://hardhat:8545
+      MOCK_IPFS_CID: bafybeiemockcid12345678
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+      - ./contracts/deployment:/contracts/deployment
+    depends_on:
+      - hardhat
+    networks:
+      - devnet
+
+  frontend:
+    container_name: hallucination-frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    command: npm run dev
+    environment:
+      NEXT_PUBLIC_BACKEND_URL: http://backend:8000
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+    depends_on:
+      - backend
+    networks:
+      - devnet
+
+networks:
+  devnet:
+    driver: bridge
