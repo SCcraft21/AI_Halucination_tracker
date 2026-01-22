@@ -1,0 +1,10 @@
+fastapi==0.115.0
+uvicorn==0.30.6
+transformer==4.44.2
+torch==2.4.1
+numpy==2.1.1
+celery==5.4.0
+redis==5.0.8
+web3==6.20.4
+python-dotenv==1.0.1
+nltk==3.9.1
