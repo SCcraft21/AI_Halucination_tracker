@@ -1,6 +1,6 @@
 fastapi==0.115.0
 uvicorn==0.30.6
-transformer==4.44.2
+transformer==4.57.6
 torch==2.4.1
 numpy==2.1.1
 celery==5.4.0
